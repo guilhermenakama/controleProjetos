@@ -10,7 +10,7 @@ const ProjectControlChart = () => {
       id: 1, 
       date: '2024-06-10', 
       description: 'Visita in-loco para mapeamento de necessidades',
-      activity: 'Análise de requisitos',
+      project: 'Análise de requisitos',
       startTime: '08:30',
       endTime: '13:30',
       duration: 5.0,
@@ -23,7 +23,7 @@ const ProjectControlChart = () => {
   const [newEvent, setNewEvent] = useState({
     date: new Date().toISOString().split('T')[0],
     description: '',
-    activity: '',
+    project: '',
     startTime: '',
     endTime: '',
     duration: 0,
@@ -233,7 +233,7 @@ const ProjectControlChart = () => {
 
       const date = row['Data'] || row['DATE'] || row['data'] || row['Date'];
       const description = row['Descrição'] || row['DESCRIPTION'] || row['descrição'] || row['Description'] || '';
-      const activity = row['Atividade'] || row['ACTIVITY'] || row['atividade'] || row['Activity'] || description;
+      const activity = row['Projeto'] || row['PROJECT'] || row['projeto'] || row['Project'] || row['Atividade'] || row['ACTIVITY'] || row['atividade'] || row['Activity'] || description;
       const startTime = row['Início'] || row['Horário Inicial'] || row['START_TIME'] || row['horario_inicial'] || row['Start Time'] || '';
       const endTime = row['Fim'] || row['Horário Final'] || row['END_TIME'] || row['horario_final'] || row['End Time'] || '';
       const duration = Number(row['Total Horas Fase'] || row['Duração (h)'] || row['DURATION'] || row['duracao'] || row['Duration'] || row['Horas'] || 0);
@@ -247,7 +247,7 @@ const ProjectControlChart = () => {
           id: i,
           date: formatDate(date),
           description: description,
-          activity: activity,
+          project: activity,
           startTime: startTime,
           endTime: endTime,
           duration: duration || calculateDuration(startTime, endTime),
@@ -333,7 +333,7 @@ const ProjectControlChart = () => {
       setNewEvent({
         date: new Date().toISOString().split('T')[0],
         description: '',
-        activity: '',
+        project: '',
         startTime: '',
         endTime: '',
         duration: 0,
@@ -680,6 +680,7 @@ const ProjectControlChart = () => {
                 <p><strong>Campos obrigatórios:</strong></p>
                 <ul className="list-disc list-inside mt-1 space-y-1">
                   <li><strong>Data:</strong> Data da atividade</li>
+                  <li><strong>Projeto:</strong> Categoria do projeto</li>
                   <li><strong>Descrição:</strong> Descrição da atividade</li>
                   <li><strong>Fase:</strong> Número da fase (1, 2, 3, ...)</li>
                   <li><strong>Status:</strong> Concluído/Em andamento/Pendente</li>
@@ -709,6 +710,16 @@ const ProjectControlChart = () => {
                 value={newEvent.date}
                 onChange={(e) => setNewEvent({...newEvent, date: e.target.value})}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Projeto</label>
+              <input
+                type="text"
+                value={newEvent.project}
+                onChange={(e) => setNewEvent({...newEvent, project: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Categoria do projeto"
               />
             </div>
             <div>
@@ -802,6 +813,7 @@ const ProjectControlChart = () => {
                   <tr className="border-b border-gray-200">
                     <th className="text-left py-3 px-2 font-medium text-gray-700">Data</th>
                     <th className="text-left py-3 px-2 font-medium text-gray-700">Fase</th>
+                    <th className="text-left py-3 px-2 font-medium text-gray-700">Projeto</th>
                     <th className="text-left py-3 px-2 font-medium text-gray-700">Descrição</th>
                     <th className="text-left py-3 px-2 font-medium text-gray-700">Horário</th>
                     <th className="text-left py-3 px-2 font-medium text-gray-700">Horas</th>
@@ -825,6 +837,11 @@ const ProjectControlChart = () => {
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${phases[event.phase]?.bgColor || 'bg-gray-100'} text-gray-800`}>
                           {phases[event.phase]?.name || `Fase ${event.phase}`}
                         </span>
+                      </td>
+                      <td className="py-3 px-2 max-w-32">
+                        <div className="truncate font-medium text-blue-600" title={event.project}>
+                          {event.project}
+                        </div>
                       </td>
                       <td className="py-3 px-2 max-w-40">
                         <div className="truncate" title={event.description}>
